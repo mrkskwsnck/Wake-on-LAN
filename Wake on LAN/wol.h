@@ -9,19 +9,6 @@
 #ifndef Wake_on_LAN_wol_h
 #define Wake_on_LAN_wol_h
 
-/* From: http://www.osxentwicklerforum.de/index.php?page=Thread&postID=103923 */
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <limits.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
-int Wake_on_LAN(char *ip_broadcast,char *wake_mac);
+int wakeOnLan(const char *ipBroadcast, const char *mac2wake);
 
 #endif

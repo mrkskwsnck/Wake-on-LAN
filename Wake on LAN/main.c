@@ -11,6 +11,6 @@
 
 int main (int argc, const char * argv[])
 {
-    return Wake_on_LAN((char *)argv[1], (char *)argv[2]);
+    return wakeOnLan(argv[1], argv[2]);
 }
 

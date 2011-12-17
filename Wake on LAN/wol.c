@@ -6,64 +6,71 @@
 //  Copyright (c) 2011 Kwasniccy. All rights reserved.
 //
 
-/* From: http://www.osxentwicklerforum.de/index.php?page=Thread&postID=103923 */
+/* 
+ * How to found from: 
+ * • file:///Users/markuskwasnicki/Desktop/Meines/Wissenswertes/Wake%20on%20LAN/Simple%20Java%20Implementation%20of%20Wake-on-LAN.html
+ * • http://www.osxentwicklerforum.de/index.php?page=Thread&postID=103923 
+ */
 
 #include "wol.h"
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
-int Wake_on_LAN(char *ip_broadcast,char *wake_mac)
+int wakeOnLan(const char *ipBroadcast, const char *mac2wake)
 {
     /* Create magic packet */
-	char mac[102];
-	char *x;
-	char macpart[2];
-	char test[103];
+	unsigned char magicPacket[102];
+	unsigned char macAddress[6];
     
-	for (int i=0;i<6;i++) mac[i]=255;
-	for (int i=1;i<17;i++) {
-		macpart[0]=wake_mac[0];
-		macpart[1]=wake_mac[1];
-		mac[6*i]=strtol(macpart,&x,16);
-		macpart[0]=wake_mac[3];
-		macpart[1]=wake_mac[4];
-		mac[6*i+1]=strtol(macpart,&x,16);
-		macpart[0]=wake_mac[6];
-		macpart[1]=wake_mac[7];
-		mac[6*i+2]=strtol(macpart,&x,16);
-		macpart[0]=wake_mac[9];
-		macpart[1]=wake_mac[10];
-		mac[6*i+3]=strtol(macpart,&x,16);
-		macpart[0]=wake_mac[12];
-		macpart[1]=wake_mac[13];
-		mac[6*i+4]=strtol(macpart,&x,16);
-		macpart[0]=wake_mac[15];
-		macpart[1]=wake_mac[16];
-		mac[6*i+5]=strtol(macpart,&x,16);
-	}
-	for (int i=0;i<103;i++) test[i]=mac[i];
-	test[102]=0;
+    /* The first 6 bytes of the magic packet are filled with 0xFF. This is probably the source broadcast MAC address? */
+    for (int i = 0; i < 6; i++) {
+        magicPacket[i] = 0xFF;
+    }
+    
+    /* The next 6 bytes are the MAC address of the target computer. */
+    char *iterator = (char *)mac2wake;  // Reading from const char only, storing iterators position
+    for (int i = 0; i < 6; i++) {
+        long macPart = strtol(iterator, &iterator, 16);
+        iterator++;
+        macAddress[i] = macPart;
+    }
+    
+    /* Each subsequent set of 6 bytes is also filled with the MAC address of the target computer, until the packet is full at 102 octets. */
+    for (int i = 6; i < 102; i++) {
+        for (int j = 0; j < 6; j++) {
+            magicPacket[i++] = macAddress[j];
+        }
+        i--;
+    }
     // --
 
 	/* Sending UDP magic packet */
-	int sockfd,an=1;
-
-	struct sockaddr_in serverAddress;
-	
-	if ( (sockfd = socket( AF_INET, SOCK_DGRAM,17)) < 0 ) {
-		perror( "socket" );
+	int socketDescriptor;
+	if ((socketDescriptor = socket(AF_INET, SOCK_DGRAM, 17)) < 0) {
+		perror("socket");
 		return 1;
 	}
+	int socketOptionValue = 1;
+	setsockopt(socketDescriptor, SOL_SOCKET, SO_BROADCAST, &socketOptionValue, sizeof(socketOptionValue));
 	
-	setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,&an,sizeof(an));
+	struct sockaddr_in socketAddress;
+	bzero(&socketAddress, sizeof(socketAddress));
+	socketAddress.sin_family = AF_INET;
+	socketAddress.sin_port = htons(9);
 	
-	bzero( &serverAddress, sizeof(serverAddress) );
-	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_port = htons( 9 );
+	inet_pton(AF_INET, ipBroadcast, &socketAddress.sin_addr);
 	
-	inet_pton( AF_INET, ip_broadcast, &serverAddress.sin_addr );
-	
-	sendto(sockfd,&mac,102,0,(struct sockaddr *)&serverAddress,sizeof(serverAddress));
-	close(sockfd);
+	sendto(socketDescriptor, &magicPacket, 102, 0, (struct sockaddr *)&socketAddress, sizeof(socketAddress));
+	close(socketDescriptor);
     // --
 	
 	return 0;
 }
+

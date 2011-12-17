@@ -12,33 +12,14 @@
 
 int Wake_on_LAN(char *ip_broadcast,char *wake_mac)
 {
-	int i,sockfd,an=1;
-	char *x;
+    /* Create magic packet */
 	char mac[102];
+	char *x;
 	char macpart[2];
 	char test[103];
     
-    //	ip_broadcast = "192.168.1.255";
-    //  wake_mac = "00:1d:7d:a6:44:da";
-    printf("%s\n%s\n", ip_broadcast, wake_mac);
-	
-	struct sockaddr_in serverAddress;
-	
-	if ( (sockfd = socket( AF_INET, SOCK_DGRAM,17)) < 0 ) {
-		perror( "socket" );
-		return 1;
-	}
-	
-	setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,&an,sizeof(an));
-	
-	bzero( &serverAddress, sizeof(serverAddress) );
-	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_port = htons( 9 );
-	
-	inet_pton( AF_INET, ip_broadcast, &serverAddress.sin_addr );
-	
-	for (i=0;i<6;i++) mac[i]=255;
-	for (i=1;i<17;i++) {
+	for (int i=0;i<6;i++) mac[i]=255;
+	for (int i=1;i<17;i++) {
 		macpart[0]=wake_mac[0];
 		macpart[1]=wake_mac[1];
 		mac[6*i]=strtol(macpart,&x,16);
@@ -58,11 +39,31 @@ int Wake_on_LAN(char *ip_broadcast,char *wake_mac)
 		macpart[1]=wake_mac[16];
 		mac[6*i+5]=strtol(macpart,&x,16);
 	}
-	for (i=0;i<103;i++) test[i]=mac[i];
+	for (int i=0;i<103;i++) test[i]=mac[i];
 	test[102]=0;
+    // --
+
+	/* Sending UDP magic packet */
+	int sockfd,an=1;
+
+	struct sockaddr_in serverAddress;
+	
+	if ( (sockfd = socket( AF_INET, SOCK_DGRAM,17)) < 0 ) {
+		perror( "socket" );
+		return 1;
+	}
+	
+	setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,&an,sizeof(an));
+	
+	bzero( &serverAddress, sizeof(serverAddress) );
+	serverAddress.sin_family = AF_INET;
+	serverAddress.sin_port = htons( 9 );
+	
+	inet_pton( AF_INET, ip_broadcast, &serverAddress.sin_addr );
 	
 	sendto(sockfd,&mac,102,0,(struct sockaddr *)&serverAddress,sizeof(serverAddress));
 	close(sockfd);
+    // --
 	
 	return 0;
 }

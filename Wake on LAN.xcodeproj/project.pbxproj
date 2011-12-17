@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5E7F8848149CB93300F1DC50 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 5E7F8847149CB93300F1DC50 /* main.c */; };
 		5E7F884A149CB93300F1DC50 /* Wake_on_LAN.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5E7F8849149CB93300F1DC50 /* Wake_on_LAN.1 */; };
+		5E7F8851149CB9E800F1DC50 /* wol.c in Sources */ = {isa = PBXBuildFile; fileRef = 5E7F8850149CB9E800F1DC50 /* wol.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,8 @@
 		5E7F8843149CB93300F1DC50 /* Wake on LAN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Wake on LAN"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E7F8847149CB93300F1DC50 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		5E7F8849149CB93300F1DC50 /* Wake_on_LAN.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Wake_on_LAN.1; sourceTree = "<group>"; };
+		5E7F8850149CB9E800F1DC50 /* wol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wol.c; sourceTree = "<group>"; };
+		5E7F8852149CB9F700F1DC50 /* wol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +65,8 @@
 			children = (
 				5E7F8847149CB93300F1DC50 /* main.c */,
 				5E7F8849149CB93300F1DC50 /* Wake_on_LAN.1 */,
+				5E7F8850149CB9E800F1DC50 /* wol.c */,
+				5E7F8852149CB9F700F1DC50 /* wol.h */,
 			);
 			path = "Wake on LAN";
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E7F8848149CB93300F1DC50 /* main.c in Sources */,
+				5E7F8851149CB9E800F1DC50 /* wol.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

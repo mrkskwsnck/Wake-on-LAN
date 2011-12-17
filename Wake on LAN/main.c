@@ -7,12 +7,10 @@
 //
 
 #include <stdio.h>
+#include "wol.h"
 
 int main (int argc, const char * argv[])
 {
-
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
+    return Wake_on_LAN((char *)argv[1], (char *)argv[2]);
 }
 

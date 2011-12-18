@@ -10,6 +10,10 @@
  * How to found from: 
  * • file:///Users/markuskwasnicki/Desktop/Meines/Wissenswertes/Wake%20on%20LAN/Simple%20Java%20Implementation%20of%20Wake-on-LAN.html
  * • http://www.osxentwicklerforum.de/index.php?page=Thread&postID=103923 
+ * 
+ * Additional notes:
+ * • The „Magic Packet“ needs to be sent as UDP packet to the networks broadcast address on port 7 or 9.
+ * • Errors should be evaluated via „errno“!
  */
 
 #include "wol.h"

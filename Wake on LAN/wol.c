@@ -8,7 +8,7 @@
 
 /* 
  * How to found from: 
- * • file:///Users/markuskwasnicki/Desktop/Meines/Wissenswertes/Wake%20on%20LAN/Simple%20Java%20Implementation%20of%20Wake-on-LAN.html
+ * • http://www.jibble.org/wake-on-lan/
  * • http://www.osxentwicklerforum.de/index.php?page=Thread&postID=103923 
  * 
  * Additional notes:

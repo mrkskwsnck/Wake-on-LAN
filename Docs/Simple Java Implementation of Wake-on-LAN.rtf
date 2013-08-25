@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green19\blue236;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww18680\viewh20240\viewkind0
+\deftab720
+\pard\pardeftab720\sa420\ql\qnatural
+
+\f0\b\fs64 \cf0 Wake-On-LAN\
+\pard\pardeftab720\sa380\ql\qnatural
+
+\fs48 \cf0 Simple Java Implementation of Wake-on-LAN\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 Wake-on-LAN is fantastic. It lets you turn on a computer via the network, which is great when you need to turn on your home machine while you're at work. Most PCs these days support Wake-on-LAN.\
+If your network socket still shows a green light after you've shut down computer, it probably supports Wake-on-LAN. The motherboard uses a small amount of power to monitor network traffic and look for special Wake-on-LAN packets. If it sees one, it will power up the system as if you had just pressed the on switch.\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\b\fs38 \cf0 Creating a Wake-on-LAN packet\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 Some people are surprised how difficult it is to find out how to create a Wake-on-LAN packet. There are a few oddities about it, sure, but this guide will hopefully explain what you need to do. I'll show you how to create a simple Java program that sends a Wake-on-LAN packet to wake up a specified machine. This program can easily be translated into other languages, but Java offers the platform independence which is useful in a networked environment.\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\b\fs38 \cf0 UDP and MAC addresses\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 A Wake-on-LAN packet is an ordinary UDP packet which contains the MAC address of the target computer. For reasons unknown to me, the UDP packet must be 16 times larger than the byte representation of the MAC address, plus an extra 6 bytes for a header. A MAC address is usually specified as a string of hexadecimal digits, for example 00:0D:61:08:22:4A, so can be represented using just 6 bytes. This makes the total packet size 6 + 16*6 = 102 bytes.\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\ql\qnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}The first 6 bytes of the packet are filled with 0xff. I'm not sure why!\
+{\listtext	\'95	}The next 6 bytes are the MAC address of the target computer\
+{\listtext	\'95	}Each subsequent set of 6 bytes is also filled with the MAC address of the target computer, until the packet is full.\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\b\fs38 \cf0 Sending the Magic Packet\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 The UDP packet is sent to a broadcast address, such as 192.168.0.255. This will cause it to be received by all computers on your local LAN, but only those with a matching MAC address will respond by powering on. MAC addresses are associated with each network interface and are typically unique. The UDP packet uses port 9.\
+Note that the delivery of a UDP packet is not guaranteed. You may need to send more than one Wake-on-LAN packet if you are using a busy network.\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\b\fs38 \cf0 Finding out your MAC address\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 If you are running Windows, your MAC address will be revealed when you type 
+\f1\fs26 ipconfig /all
+\f0\fs32  into a command prompt. You'll be looking for a line similar to this:\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0     Physical Address. . . . . . . . . : 00-0E-62-09-23-4B\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\f0\b\fs38 \cf0 Writing the Wake-on-LAN Java program\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\b0\fs32 \cf0 Let's write a simple program to do Wake-on-LAN.\
+All it needs to do is accept two piece of user input: an IP address and a MAC address. The Wake-on-LAN packet will be broadcast to the IP address and will only wake up the computer with a matching MAC address.\
+To make it more user friendly, the program will accept either of the two typical ways of expressing a MAC address, for example:\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 00:0E:62:09:23:4B\
+00-0E-62-09-23-4B\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\f0\fs32 \cf0 All you need to do is provide a handy method to turn strings like these into 6-byte representations. This is a simple case of converting hex into decimal. The MAC address can then be bundled off into a UDP packet and sent to the target machine.\
+\pard\pardeftab720\sa360\ql\qnatural
+
+\b\fs38 \cf0 Download the Wake-on-LAN code\
+\pard\pardeftab720\sa320\ql\qnatural
+{\field{\*\fldinst{HYPERLINK "file:///Users/markuskwasnicki/Desktop/Workbench/Wake%20on%20LAN/WakeOnLan.java"}}{\fldrslt 
+\fs32 \cf2 \ul \ulc2 Download WakeOnLan.java}}
+\b0\fs32 \
+Save the WakeOnLan.java file to your hard disk.\
+Compile the program with:\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 % javac *.java\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\f0\fs32 \cf0 Now run the program without any parameters and it will now remind you about the two parameters you need to supply on the command line:\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 % java WakeOnLan\
+Usage: java WakeOnLan  \
+Example: java WakeOnLan 192.168.0.255 00:0E:62:09:23:4B\
+Example: java WakeOnLan 192.168.0.255 00-0E-62-09-23-4B\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\f0\fs32 \cf0 Make sure you know the MAC address of the target machine, and give it to the program. If all went well, it should send the magic packet successfully:\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 % java WakeOnLan 192.168.0.255 00-0E-62-09-23-4B\
+Wake-on-LAN packet sent.\
+\pard\pardeftab720\sa320\ql\qnatural
+
+\f0\fs32 \cf0 You should now see the target machine booting up as if by magic.\
+\'a0\
+}
